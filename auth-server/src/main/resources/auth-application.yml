@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: auth-server
+server:
+  port: 8081
+security:
+  oauth2:
+    resourceserver:
+      jwt:
+        issuer-uri: http://localhost:8090/realms/master
+        jwk-set-uri: http://localhost:8090/realms/master/protocol/openid-connect/certs
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+jwt:
+  auth:
+    converter:
+      resource-id: trendly-ai-id
+      principal-attribute: preferred_username
+
