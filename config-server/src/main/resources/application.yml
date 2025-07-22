@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          default-label: "main"
+          password: ${GIT_KEY}
+          username: "Cihan-KARA-hub"
+          uri: "https://github.com/Cihan-KARA-hub/config-server-mikroservice.git"
+          skip-ssl-validation: true
+server:
+  port: 8888
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
