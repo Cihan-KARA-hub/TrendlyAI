@@ -1,34 +1,85 @@
 package com.kara.authserver.api.controller;
 
+import com.kara.authserver.api.dto.*;
+import com.kara.authserver.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/v1")
 public class authController {
-    @GetMapping
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("Hello!");
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Çalışıyor!");
+    }
+    private final UserService service;
+
+    public authController(UserService service) {
+        this.service = service;
     }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('role_user')")
-    public ResponseEntity<String> helloUser() {
-        return ResponseEntity.ok("Hello From User!");
+    //all user
+    @GetMapping("/users")
+    @PreAuthorize("hasAnyAuthority('app:read')")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        return ResponseEntity.ok(service.getAllUsers());
     }
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('role_admin')")
-    public ResponseEntity<String> helloAdmin() {
-        return ResponseEntity.ok("Hello From Admin!");
+    //create user
+    @PostMapping("/users")
+    @PreAuthorize("hasAnyAuthority('app:create')")
+    public ResponseEntity<String> createUser(@RequestBody CreateUserDto createUserDto) {
+
+        try {
+            service.createUser(createUserDto);
+
+            return ResponseEntity.ok(createUserDto.getUsername() + " created");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create user");
+        }
     }
-    @GetMapping("/")
-    public String index(@AuthenticationPrincipal Jwt jwt) {
-        return String.format("Hello, %s!", jwt.getClaimAsString("preferred_username"));
+
+    //Delete user
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasAnyAuthority('app:delete')")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+        service.userDelete(id);
+        return ResponseEntity.ok("User deleted");
     }
+
+    //Update user
+    @PutMapping("/users/{id}")
+    @PreAuthorize("hasAnyAuthority('app:update')")
+    public ResponseEntity<String> updateUser(@RequestBody UserUpdateDto userUpdateDto, @PathVariable String id) {
+        service.updateUser(userUpdateDto, id);
+        return ResponseEntity.ok(userUpdateDto.getUsername());
+    }
+
+    //Reset password
+    @PutMapping("/{id}/reset-password")
+    @PreAuthorize("hasAnyAuthority('app:update')")
+    public ResponseEntity<String> resetPassword(@RequestBody UserPasswordDto passwordDto, @PathVariable String id) {
+        service.resetPassword(passwordDto, id);
+        return ResponseEntity.ok(passwordDto.getValue());
+    }
+    //User token
+    @PostMapping("/user-token")
+    public TokenResponseDto createUserToken(@RequestBody CreateTokenDto dto) {
+        TokenResponseDto tokenResponse = service.getToken(dto.getUserName(), dto.getPassword());
+        return ResponseEntity.ok(tokenResponse).getBody();
+    }
+    //get user id
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('app:read')")
+    public ResponseEntity<UserResponseDto> getByIdUser(@PathVariable String id) {
+        UserResponseDto user = service.getByIdUser(id);
+        return ResponseEntity.ok(user);
+    }
+
 }

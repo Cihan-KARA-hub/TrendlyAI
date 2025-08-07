@@ -1,0 +1,23 @@
+package com.kara.productserver.repository;
+
+import com.kara.productserver.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+@Repository
+public interface ProductRepository extends JpaRepository<Product, UUID> {
+    Page<Product> findByCategory(int category, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Product p SET p.stock_quantity = p.stock_quantity - 1 " +
+            "WHERE p.id = :uuid AND p.stock_quantity > 0")
+    void decrementStockByUuidIfAvailable(@Param("uuid") UUID uuid);
+}

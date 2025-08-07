@@ -31,5 +31,24 @@ services:
     depends_on:
       - keycloak-db
 
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: product
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - another_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 volumes:
   postgres_data:
+
+  another_postgres_data:
+

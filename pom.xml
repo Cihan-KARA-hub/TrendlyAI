@@ -21,6 +21,7 @@
     <modules>
         <module>config-server</module>
         <module>auth-server</module>
+        <module>product-server</module>
     </modules>
     <dependencies>
 

@@ -1,22 +1,32 @@
 spring:
   application:
     name: auth-server
+
+  security:
+    oauth2:
+      resourceserver:
+        public-paths: /v1/
+        jwt:
+          jwk-set-uri: http://localhost:8090/realms/dev/protocol/openid-connect/certs
+
 server:
   port: 8081
-security:
-  oauth2:
-    resourceserver:
-      jwt:
-        issuer-uri: http://localhost:8090/realms/master
-        jwk-set-uri: http://localhost:8090/realms/master/protocol/openid-connect/certs
+
 logging:
   level:
     org:
       springframework:
         security: DEBUG
-jwt:
-  auth:
-    converter:
-      resource-id: trendly-ai-id
-      principal-attribute: preferred_username
 
+
+keycloak:
+  auth-server-url: http://localhost:8090
+  realm: trendly-auth
+  resource: trendly-auth
+  ssl-required: none
+  token-uri: http://localhost:8090/realms/trendly-auth/protocol/openid-connect/token
+  users-uri: http://localhost:8090/admin/realms/trendly-auth/users
+  client-secret: 9A4XISA2PlQHrMV7TLbg3EubK8RbuZ2R
+  client-id: trendly-auth
+  admin-username: admin
+  admin-password: admin
