@@ -2,18 +2,17 @@ package com.kara.orderserver.services;
 
 
 import com.kara.orderserver.api.dto.OrderAddDto;
-import com.kara.orderserver.api.dto.OrderDto;
+import com.kara.orderserver.api.dto.OrdersDto;
 
 public interface OrderService {
     // sipariş oluştma
-    OrderAddDto addOrder(OrderDto order);
+    void addOrder(OrderAddDto order);
 
-    boolean deleteOrder(int orderId);
+    void deleteOrder(Long orderId);
 
-    OrderDto findOrderById(int orderId);
+    OrdersDto findOrderById(Long orderId);
 
-    // liste güncelleme
-    void updateOListOrder(Long OrderItemId, Long OrderId);
+    void orderItemDelete(Long orderItemId);
 
 
 }

@@ -1,21 +1,34 @@
 package com.kara.orderserver.api.dto;
 
-import com.kara.orderserver.entity.OrderItems;
 
-import java.util.List;
+import java.util.UUID;
 
 public class KafkaProductStockDto {
-    private List<OrderItems> orderItems;
+    private UUID id;
+    private int stockCount;
 
-    public KafkaProductStockDto(List<OrderItems> orderItems) {
-        this.orderItems = orderItems;
+    public KafkaProductStockDto(UUID id, int stockCount) {
+        this.id = id;
+        this.stockCount = stockCount;
     }
 
-    public List<OrderItems> getOrderItems() {
-        return orderItems;
+    public KafkaProductStockDto() {
+
     }
 
-    public void setOrderItems(List<OrderItems> orderItems) {
-        this.orderItems = orderItems;
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public int getStockCount() {
+        return stockCount;
+    }
+
+    public void setStockCount(int stockCount) {
+        this.stockCount = stockCount;
     }
 }

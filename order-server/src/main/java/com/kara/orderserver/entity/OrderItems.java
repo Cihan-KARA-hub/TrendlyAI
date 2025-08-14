@@ -10,45 +10,50 @@ import java.util.UUID;
 @Entity
 @Table(name = "order_items")
 public class OrderItems {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
+
     @Column(name = "product_uuid", nullable = false)
     private UUID productUuid;
+
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+
     @Column(name = "quantity", nullable = false)
     private int quantity;
+
     @Column(name = "barcode", nullable = false, length = 8)
     private String barcode;
+
     @Column(name = "price", nullable = false)
     private double price;
+
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime created_at;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updated_at;
+    private OffsetDateTime updatedAt;
 
-    public OrderItems(Long id, Orders order, UUID productUuid, String name, int quantity, String barcode, double price, OffsetDateTime created_at, OffsetDateTime updated_at) {
-        this.id = id;
-        this.order = order;
+    public OrderItems() {
+    }
+
+    public OrderItems(UUID productUuid, String name, int quantity, String barcode, double price) {
         this.productUuid = productUuid;
         this.name = name;
         this.quantity = quantity;
         this.barcode = barcode;
         this.price = price;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
     }
 
-    public OrderItems() {
-
-    }
-
+    // ====== Getter & Setter ======
     public Long getId() {
         return id;
     }
@@ -105,19 +110,19 @@ public class OrderItems {
         this.price = price;
     }
 
-    public OffsetDateTime getCreated_at() {
-        return created_at;
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(OffsetDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public OffsetDateTime getUpdated_at() {
-        return updated_at;
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdated_at(OffsetDateTime updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
