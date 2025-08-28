@@ -15,7 +15,7 @@ public class ProductService {
         this.fakeProduct = fakeProduct;
         this.productController = productController;
     }
-    @Scheduled(fixedRate = 5000)
+   // @Scheduled(fixedRate = 5000)
     public void generateAndSendProduct() {
         try {
             ProductCreateDto fake = fakeProduct.generateProduct();

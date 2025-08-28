@@ -1,5 +1,6 @@
 package com.kara.orderserver.mapper;
 
+import com.kara.orderserver.api.dto.AddOrderItemsDto;
 import com.kara.orderserver.api.dto.KafkaProductStockDto;
 import com.kara.orderserver.api.dto.OrdersDto;
 import com.kara.orderserver.entity.OrderItems;
@@ -12,12 +13,23 @@ import java.util.List;
 @Configuration
 public class OrderMapper {
 
-    public List<KafkaProductStockDto> kafkaMapper(List<OrderItems> items) {
+    public List<KafkaProductStockDto> kafkaMapper(List<AddOrderItemsDto> items) {
         List<KafkaProductStockDto> dtos = new ArrayList<>();
         items.forEach(item -> {
             KafkaProductStockDto dto = new KafkaProductStockDto();
             dto.setId(item.getProductUuid());
             dto.setStockCount(item.getQuantity());
+            dtos.add(dto);
+        });
+        return dtos;
+    }
+    public List<OrderItems> orderItemsEntity(List<AddOrderItemsDto> items) {
+        List<OrderItems> dtos = new ArrayList<>();
+        items.forEach(item -> {
+            OrderItems dto = new OrderItems();
+            dto.setPrice(item.getPrice());
+            dto.setQuantity(item.getQuantity());
+            dto.setProductUuid(item.getProductUuid());
             dtos.add(dto);
         });
         return dtos;

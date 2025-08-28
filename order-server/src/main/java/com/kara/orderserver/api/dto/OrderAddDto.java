@@ -1,15 +1,12 @@
 package com.kara.orderserver.api.dto;
 
-import com.kara.orderserver.entity.OrderItems;
-
 import java.util.List;
 
 public class OrderAddDto {
     private Long userId;
-    private List<OrderItems> items;
-    public OrderAddDto(Long userId, List<OrderItems> items) {
-        this.userId = userId;
-        this.items = items;
+    private List<AddOrderItemsDto> items;
+
+    public OrderAddDto() {
     }
 
     public Long getUserId() {
@@ -20,13 +17,11 @@ public class OrderAddDto {
         this.userId = userId;
     }
 
-    public List<OrderItems> getItems() {
+    public List<AddOrderItemsDto> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItems> items) {
+    public void setItems(List<AddOrderItemsDto> items) {
         this.items = items;
     }
-
-
 }

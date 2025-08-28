@@ -3,6 +3,7 @@ package com.kara.orderserver.services;
 import com.kara.orderserver.api.dto.KafkaProductStockDto;
 import com.kara.orderserver.api.dto.OrderAddDto;
 import com.kara.orderserver.api.dto.OrdersDto;
+import com.kara.orderserver.entity.OrderItems;
 import com.kara.orderserver.entity.Orders;
 import com.kara.orderserver.mapper.OrderMapper;
 import com.kara.orderserver.repository.OrderItemsRepository;
@@ -32,12 +33,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void addOrder(OrderAddDto order) {
+        List<OrderItems> orderItems =orderMapper.orderItemsEntity(order.getItems());
         List<KafkaProductStockDto> kafkaDto = orderMapper.kafkaMapper(order.getItems());
-        this.kafkaTemplate.send("prod.order.placed","stockDeIncrement",kafkaDto);
+       // this.kafkaTemplate.send("prod.order.placed","stockDeIncrement",kafkaDto);
+
         Orders orders = new Orders();
-        orders.setItems(order.getItems());
-        order.getItems().forEach(orderItems -> {
-            orders.setTotalPrice(orderItems.getPrice() + orders.getTotalPrice());
+        orders.setItems(orderItems);
+        order.getItems().forEach(orderItem -> {
+            orders.setTotalPrice(orderItem.getPrice() + orders.getTotalPrice());
         });
         orders.setUserId(order.getUserId());
         ordersRepository.save(orders);

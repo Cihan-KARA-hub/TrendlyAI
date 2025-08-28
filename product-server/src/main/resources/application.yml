@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/product
+    username: admin
+    password: secret
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+    open-in-view: false
+    generate-ddl: false
+  sql:
+    init:
+      platform: postgresql
+  application:
+    name: product-server
+  kafka:
+    bootstrap-servers: localhost:9092  # Prod'da burayı KAFKA_BROKER:9092 yap
+    properties:
+      spring.json.trusted.packages: '*'   # JSON deserialize ederken güvenilen paketler
+    consumer:
+      group-id: my_consumer_group
+      enable-auto-commit: false           # Prod'da manual commit daha güvenli
+      auto-offset-reset: earliest
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+      max-poll-records: 500                # Bir seferde alınacak max kayıt sayısı
+      fetch-min-size: 50000                # (opsiyonel) Min veri boyutu
+      fetch-max-wait: 500                  # (opsiyonel) ms cinsinden bekleme süresi
+    producer:
+      acks: all                            # Mesaj teslim garantisi
+      retries: 5                           # Gönderim hatasında tekrar deneme
+      batch-size: 16384                    # Toplu gönderim için batch boyutu
+      linger-ms: 5                         # Toplu gönderim için bekleme süresi
+      buffer-memory: 33554432              # Bellek limiti
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      ack-mode: manual                     # Mesaj onayı için (manual ack)
+      concurrency: 3
+
+server:
+  port: 8082
+
+
