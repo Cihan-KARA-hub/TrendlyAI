@@ -17,7 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Product p SET p.stock_quantity = p.stock_quantity - 1 " +
-            "WHERE p.id = :uuid AND p.stock_quantity > 0")
-    void decrementStockByUuidIfAvailable(@Param("uuid") UUID uuid);
+    @Query("UPDATE Product p " +
+            "SET p.stock_quantity = p.stock_quantity - :stockQuantity " +
+            "WHERE p.id = :uuid AND p.stock_quantity >= :stockQuantity")
+    void decrementStockByUuidIfAvailable(@Param("uuid") UUID uuid,
+                                        @Param("stockQuantity") int stockQuantity);
 }

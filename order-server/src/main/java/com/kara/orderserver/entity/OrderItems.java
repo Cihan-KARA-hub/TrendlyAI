@@ -22,22 +22,13 @@ public class OrderItems {
     @Column(name = "product_uuid", nullable = false)
     private UUID productUuid;
 
-    @Column(name = "name", nullable = false, length = 255)
-    private String name;
-
     @Column(name = "quantity", nullable = false)
     private int quantity;
-
-    @Column(name = "barcode", nullable = false, length = 8)
-    private String barcode;
-
     @Column(name = "price", nullable = false)
     private double price;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
-
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
@@ -45,15 +36,14 @@ public class OrderItems {
     public OrderItems() {
     }
 
-    public OrderItems(UUID productUuid, String name, int quantity, String barcode, double price) {
-        this.productUuid = productUuid;
-        this.name = name;
-        this.quantity = quantity;
-        this.barcode = barcode;
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    // ====== Getter & Setter ======
     public Long getId() {
         return id;
     }
@@ -78,36 +68,12 @@ public class OrderItems {
         this.productUuid = productUuid;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public OffsetDateTime getCreatedAt() {
@@ -125,4 +91,5 @@ public class OrderItems {
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }

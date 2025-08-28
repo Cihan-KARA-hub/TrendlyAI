@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void addOrder(OrderAddDto order) {
         List<KafkaProductStockDto> kafkaDto = orderMapper.kafkaMapper(order.getItems());
-        this.kafkaTemplate.send("prod.order.placed", kafkaDto);
+        this.kafkaTemplate.send("prod.order.placed","stockDeIncrement",kafkaDto);
         Orders orders = new Orders();
         orders.setItems(order.getItems());
         order.getItems().forEach(orderItems -> {

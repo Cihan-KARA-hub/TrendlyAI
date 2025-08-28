@@ -1,7 +1,9 @@
 package com.kara.productserver.api.controller;
 
+import com.kara.productserver.api.dto.ProductCreateDto;
 import com.kara.productserver.api.dto.ProductDto;
 import com.kara.productserver.api.dto.ProductUpdateDto;
+import com.kara.productserver.services.CategoryServices;
 import com.kara.productserver.services.ProductService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +20,11 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryServices categoryServices;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CategoryServices categoryServices) {
         this.productService = productService;
+        this.categoryServices = categoryServices;
     }
 
     @GetMapping
@@ -37,9 +41,9 @@ public class ProductController {
         return ResponseEntity.status(200).build();
     }
 
-    @PostMapping()
-    public ResponseEntity<HttpStatusCode> createProduct(@RequestBody ProductDto productDto) {
-        productService.addProduct(productDto);
+    @PostMapping("/add")
+    public ResponseEntity<HttpStatusCode> createProduct(@RequestBody ProductCreateDto productCreateDto) {
+        productService.addProduct(productCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -48,9 +52,16 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.status(215).build();
     }
-    @PutMapping("decrement-stock/{id}")
-    public ResponseEntity<HttpStatusCode> decrementStock(@PathVariable UUID id) {
-        productService.decrementStock(id);
+
+    @PutMapping("decrement-stock/{id}/{quantity}")
+    public ResponseEntity<HttpStatusCode> decrementStock(@PathVariable UUID id, @PathVariable int quantity) {
+        productService.decrementStock(id, quantity);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("add-category")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addCategory(@RequestParam String name) {
+        categoryServices.addCategory(name);
     }
 }

@@ -1,16 +1,17 @@
 package com.kara.productserver.mapper;
 
+import com.kara.productserver.api.dto.ProductCreateDto;
 import com.kara.productserver.api.dto.ProductDto;
 import com.kara.productserver.api.dto.ProductUpdateDto;
 import com.kara.productserver.entity.Product;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
-
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Configuration
 public class ProductMapper {
 
     public List<ProductDto> productsToDto(Page<Product> products) {
@@ -28,15 +29,13 @@ public class ProductMapper {
         return productDtos;
     }
 
-    public Product productDtoToProduct(ProductDto productDto) {
+    public Product productDtoToProduct(ProductCreateDto productDto, int categoryId) {
         Product product = new Product();
         product.setStock_quantity(productDto.getStock_quantity());
         product.setName(productDto.getName());
-        product.setCategory(productDto.getCategoryId());
+        product.setCategory(categoryId);
         product.setBarcode(productDto.getBarcode());
         product.setPrice(productDto.getPrice());
-        product.setCreated_at(productDto.getCreated_at());
-        product.setUpdated_at(productDto.getUpdated_at());
         return product;
     }
 

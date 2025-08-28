@@ -23,6 +23,7 @@
         <module>auth-server</module>
         <module>product-server</module>
         <module>order-server</module>
+        <module>mock-data-generator-service</module>
     </modules>
     <dependencies>
 

@@ -1,10 +1,8 @@
-package com.kara.orderserver.api.dto;
-
+package com.kara.productserver.api.dto;
 
 import java.util.UUID;
 
 public class KafkaProductStockDto {
-    //productId
     private UUID id;
     private int stockCount;
 
